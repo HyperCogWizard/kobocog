@@ -12,6 +12,7 @@
 #include "../operations/ggml_opencog_ops.h"
 #include <vector>
 #include <memory>
+#include <map>
 
 namespace opencog {
 

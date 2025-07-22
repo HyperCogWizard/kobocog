@@ -8,6 +8,7 @@
 #include <cmath>
 #include <random>
 #include <iostream>
+#include <cstring>
 
 namespace opencog {
 
