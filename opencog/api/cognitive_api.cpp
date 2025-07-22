@@ -4,7 +4,7 @@
  */
 
 #include "cognitive_api.h"
-#include <json/json.h>
+#include "../vendor/nlohmann/json.hpp"
 #include <chrono>
 #include <sstream>
 #include <fstream>

@@ -450,6 +450,7 @@ lib_cublas = pick_existant_file("koboldcpp_cublas.dll","koboldcpp_cublas.so")
 lib_hipblas = pick_existant_file("koboldcpp_hipblas.dll","koboldcpp_hipblas.so")
 lib_vulkan = pick_existant_file("koboldcpp_vulkan.dll","koboldcpp_vulkan.so")
 lib_vulkan_noavx2 = pick_existant_file("koboldcpp_vulkan_noavx2.dll","koboldcpp_vulkan_noavx2.so")
+lib_opencog = pick_existant_file("koboldcpp_opencog.dll","koboldcpp_opencog.so")
 libname = ""
 lib_option_pairs = [
     (lib_default, "Use CPU"),
@@ -467,9 +468,14 @@ runopts = [opt for lib, opt in lib_option_pairs if file_exists(lib)]
 
 def init_library():
     global handle, args, libname
-    global lib_default,lib_failsafe,lib_noavx2,lib_clblast,lib_clblast_noavx2,lib_clblast_failsafe,lib_cublas,lib_hipblas,lib_vulkan,lib_vulkan_noavx2
+    global lib_default,lib_failsafe,lib_noavx2,lib_clblast,lib_clblast_noavx2,lib_clblast_failsafe,lib_cublas,lib_hipblas,lib_vulkan,lib_vulkan_noavx2,lib_opencog
 
     libname = lib_default
+    
+    # Use OpenCog library if P9ML is enabled and available
+    if args.p9ml and file_exists(lib_opencog):
+        print("Using OpenCog-enabled library for P9ML system")
+        libname = lib_opencog
 
     if args.noavx2: #failsafe implies noavx2 always
         if args.useclblast and (os.name!='nt' or file_exists("clblast.dll")):
@@ -578,6 +584,13 @@ def init_library():
     handle.last_logprobs.restype = last_logprobs_outputs
     handle.detokenize.argtypes = [token_count_outputs]
     handle.detokenize.restype = ctypes.c_char_p
+    
+    # OpenCog/P9ML function declarations
+    if hasattr(handle, 'opencog_init'):
+        handle.opencog_init.argtypes = [ctypes.c_size_t, ctypes.c_int, ctypes.c_int]
+        handle.opencog_init.restype = ctypes.c_bool
+        handle.opencog_cleanup.restype = ctypes.c_bool
+        handle.opencog_status.restype = ctypes.c_char_p
 
 def set_backend_props(inputs):
     clblastids = 0
@@ -6830,6 +6843,29 @@ def kcpp_main_process(launch_args, g_memory=None, gui_launcher=False):
         print("Unable to determine available RAM")
 
     init_library() # Note: if blas does not exist and is enabled, program will crash.
+    
+    # Initialize P9ML (OpenCog) cognitive system if enabled
+    if args.p9ml:
+        print("=== Initializing P9ML Cognitive System ===")
+        if hasattr(handle, 'opencog_init'):
+            memory_size = args.cognitive_memory * 1024 * 1024  # Convert MB to bytes
+            success = handle.opencog_init(memory_size, args.attention_focus, args.reasoning_depth)
+            if success:
+                print(f"✓ P9ML System initialized with {args.cognitive_memory}MB memory")
+                print(f"✓ Attention focus: {args.attention_focus} atoms")
+                print(f"✓ Reasoning depth: {args.reasoning_depth} steps")
+                if args.cognitive_config:
+                    if os.path.exists(args.cognitive_config):
+                        print(f"✓ Loading cognitive configuration from: {args.cognitive_config}")
+                    else:
+                        print(f"⚠ Warning: Cognitive config file not found: {args.cognitive_config}")
+            else:
+                print("✗ Failed to initialize P9ML system")
+        else:
+            print("⚠ Warning: P9ML system not available in this build")
+            print("  Use 'make OPENCOG_ENABLED=1' to build with P9ML support")
+        print("===========================================")
+    
     print("==========")
     time.sleep(1)
 
@@ -7371,6 +7407,14 @@ if __name__ == '__main__':
     compatgroup2.add_argument("--showgui", help="Always show the GUI instead of launching the model right away when loading settings from a .kcpps file.", action='store_true')
     compatgroup2.add_argument("--skiplauncher", help="Doesn't display or use the GUI launcher. Overrides showgui.", action='store_true')
     advparser.add_argument("--singleinstance", help="Allows this KoboldCpp instance to be shut down by any new instance requesting the same port, preventing duplicate servers from clashing on a port.", action='store_true')
+
+    # P9ML (OpenCog) Cognitive System Commands
+    cogparser = parser.add_argument_group('P9ML Cognitive System Commands')
+    cogparser.add_argument("--p9ml", "--opencog", help="Enable P9ML (OpenCog) cognitive reasoning system for advanced symbolic AI capabilities.", action='store_true')
+    cogparser.add_argument("--cognitive-memory", metavar=('[size in MB]'), help="Specify the memory size allocated for the cognitive system (default 256MB).", type=int, default=256)
+    cogparser.add_argument("--attention-focus", metavar=('[atoms]'), help="Set the maximum number of atoms in attentional focus (default 100).", type=int, default=100)
+    cogparser.add_argument("--reasoning-depth", metavar=('[steps]'), help="Maximum depth for PLN reasoning chains (default 10).", type=int, default=10)
+    cogparser.add_argument("--cognitive-config", metavar=('[filename]'), help="Load cognitive system configuration from a JSON file.", default="")
 
     hordeparsergroup = parser.add_argument_group('Horde Worker Commands')
     hordeparsergroup.add_argument("--hordemodelname", metavar=('[name]'), help="Sets your AI Horde display model name.", default="")

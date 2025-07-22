@@ -295,3 +295,12 @@ extern int total_transcribe_gens;
 extern int last_draft_success;
 extern int last_draft_failed;
 extern stop_reason last_stop_reason;
+
+#ifdef OPENCOG_GGML_INTEGRATION
+// OpenCog/P9ML cognitive system interface
+extern "C" {
+    extern bool opencog_init(size_t memory_size, int attention_focus, int reasoning_depth);
+    extern bool opencog_cleanup();
+    extern const char* opencog_status();
+}
+#endif

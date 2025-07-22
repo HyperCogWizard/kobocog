@@ -6,24 +6,22 @@ OPENCOG_CFLAGS = -DOPENCOG_GGML_INTEGRATION
 OPENCOG_CXXFLAGS = -DOPENCOG_GGML_INTEGRATION -std=c++17
 OPENCOG_INCLUDES = -I./opencog -I./opencog/atomspace -I./opencog/operations -I./opencog/reasoning -I./opencog/attention -I./opencog/api
 
-# OpenCog source files
+# OpenCog source files (excluding API for now)
 OPENCOG_SOURCES = \
 	opencog/atomspace/tensor_atomspace.cpp \
 	opencog/operations/ggml_opencog_ops.cpp \
 	opencog/reasoning/pln_tensor_engine.cpp \
-	opencog/attention/ecan_attention.cpp \
-	opencog/api/cognitive_api.cpp
+	opencog/attention/ecan_attention.cpp
 
 # OpenCog object files
 OPENCOG_OBJECTS = $(OPENCOG_SOURCES:.cpp=.o)
 
-# OpenCog headers
+# OpenCog headers (excluding API for now)
 OPENCOG_HEADERS = \
 	opencog/atomspace/tensor_atomspace.h \
 	opencog/operations/ggml_opencog_ops.h \
 	opencog/reasoning/pln_tensor_engine.h \
-	opencog/attention/ecan_attention.h \
-	opencog/api/cognitive_api.h
+	opencog/attention/ecan_attention.h
 
 # Default target includes OpenCog components
 .PHONY: opencog-components
@@ -112,8 +110,11 @@ help-opencog:
 	@echo "  docs-opencog      - Show documentation information"
 
 # Add OpenCog components to main build targets
-koboldcpp_default: $(OPENCOG_OBJECTS)
+ifdef OPENCOG_ENABLED
+koboldcpp_default: $(OPENCOG_OBJECTS) 
 	$(eval LDFLAGS += $(OPENCOG_OBJECTS))
+	$(eval CXXFLAGS += $(OPENCOG_CXXFLAGS))
+endif
 
 # Integration check
 .PHONY: check-integration

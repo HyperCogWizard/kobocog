@@ -4,6 +4,7 @@
  */
 
 #include "ggml_opencog_ops.h"
+#include "ggml/src/ggml-cpu/ggml-cpu-impl.h"
 #include <cmath>
 #include <algorithm>
 #include <cstring>
@@ -55,7 +56,7 @@ struct ggml_tensor* ggml_atomspace_lookup(
     
     // Result tensor with same dimensions as query
     struct ggml_tensor* result = ggml_new_tensor(ctx, GGML_TYPE_F32, 
-                                                query->n_dims, query->ne);
+                                                ggml_n_dims(query), query->ne);
     
     result->op = (enum ggml_op)GGML_OP_ATOMSPACE_LOOKUP;
     result->src[0] = atomspace;
@@ -97,7 +98,7 @@ struct ggml_tensor* ggml_activation_spread(
     
     // Result has same shape as activation
     struct ggml_tensor* result = ggml_new_tensor(ctx, GGML_TYPE_F32,
-                                                activation->n_dims, activation->ne);
+                                                ggml_n_dims(activation), activation->ne);
     
     result->op = (enum ggml_op)GGML_OP_ACTIVATION_SPREAD;
     result->src[0] = graph;
@@ -120,7 +121,7 @@ struct ggml_tensor* ggml_attention_update(
     GGML_ASSERT(wage_tensor->type == GGML_TYPE_F32);
     
     struct ggml_tensor* result = ggml_new_tensor(ctx, GGML_TYPE_F32,
-                                                attention_values->n_dims, 
+                                                ggml_n_dims(attention_values), 
                                                 attention_values->ne);
     
     result->op = (enum ggml_op)GGML_OP_ATTENTION_UPDATE;
@@ -142,7 +143,7 @@ struct ggml_tensor* ggml_pln_inference(
     
     // Result tensor for inference output
     struct ggml_tensor* result = ggml_new_tensor(ctx, GGML_TYPE_F32,
-                                                premise1->n_dims, premise1->ne);
+                                                ggml_n_dims(premise1), premise1->ne);
     
     result->op = (enum ggml_op)GGML_OP_PLN_INFERENCE;
     result->src[0] = premise1;
@@ -184,10 +185,6 @@ static void ggml_compute_forward_atomspace_lookup_f32(
     const struct ggml_tensor* atomspace = dst->src[0];
     const struct ggml_tensor* query = dst->src[1];
     
-    if (params->type == GGML_TASK_TYPE_INIT || params->type == GGML_TASK_TYPE_FINALIZE) {
-        return;
-    }
-    
     const float* atomspace_data = (const float*)atomspace->data;
     const float* query_data = (const float*)query->data;
     float* result_data = (float*)dst->data;
@@ -221,10 +218,6 @@ static void ggml_compute_forward_pattern_match_f32(
     const struct ggml_tensor* target = dst->src[1];
     float threshold = *(const float*)&dst->op_params[0];
     
-    if (params->type == GGML_TASK_TYPE_INIT || params->type == GGML_TASK_TYPE_FINALIZE) {
-        return;
-    }
-    
     const float* pattern_data = (const float*)pattern->data;
     const float* target_data = (const float*)target->data;
     float* result_data = (float*)dst->data;
@@ -243,10 +236,6 @@ static void ggml_compute_forward_activation_spread_f32(
     const struct ggml_tensor* graph = dst->src[0];
     const struct ggml_tensor* activation = dst->src[1];
     float decay = *(const float*)&dst->op_params[0];
-    
-    if (params->type == GGML_TASK_TYPE_INIT || params->type == GGML_TASK_TYPE_FINALIZE) {
-        return;
-    }
     
     const float* graph_data = (const float*)graph->data;
     const float* activation_data = (const float*)activation->data;
@@ -286,10 +275,6 @@ static void ggml_compute_forward_attention_update_f32(
     const struct ggml_tensor* attention = dst->src[0];
     const struct ggml_tensor* importance = dst->src[1];
     const struct ggml_tensor* wage = dst->src[2];
-    
-    if (params->type == GGML_TASK_TYPE_INIT || params->type == GGML_TASK_TYPE_FINALIZE) {
-        return;
-    }
     
     const float* attention_data = (const float*)attention->data;
     const float* importance_data = (const float*)importance->data;
@@ -331,10 +316,6 @@ static void ggml_compute_forward_pln_inference_f32(
     const struct ggml_tensor* premise1 = dst->src[0];
     const struct ggml_tensor* premise2 = dst->src[1];
     int rule_type = dst->op_params[0];
-    
-    if (params->type == GGML_TASK_TYPE_INIT || params->type == GGML_TASK_TYPE_FINALIZE) {
-        return;
-    }
     
     const float* p1_data = (const float*)premise1->data;
     const float* p2_data = (const float*)premise2->data;
