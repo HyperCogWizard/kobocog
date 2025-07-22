@@ -113,6 +113,7 @@ help-opencog:
 ifdef OPENCOG_ENABLED
 koboldcpp_default: $(OPENCOG_OBJECTS) 
 	$(eval LDFLAGS += $(OPENCOG_OBJECTS))
+	$(eval CXXFLAGS += $(OPENCOG_CXXFLAGS))
 endif
 
 # Integration check
