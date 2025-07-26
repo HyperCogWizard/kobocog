@@ -8,10 +8,12 @@ KoboldCpp is an easy-to-use AI text-generation software for GGML and GGUF models
 
 ## 📚 Documentation
 
-- **[Technical Architecture](ARCHITECTURE.md)** - Comprehensive system architecture with mermaid diagrams
-- **[Developer Guide](DEVELOPER_GUIDE.md)** - Contributing, extending, and development setup
-- **[API Documentation](https://lite.koboldai.net/koboldcpp_api)** - Complete API reference
-- **[Wiki](https://github.com/LostRuins/koboldcpp/wiki)** - FAQ, troubleshooting, and guides
+- **[📋 Documentation Index](DOCUMENTATION_INDEX.md)** - Complete documentation overview and navigation
+- **[🏗️ Technical Architecture](ARCHITECTURE.md)** - Comprehensive system architecture with mermaid diagrams
+- **[👨‍💻 Developer Guide](DEVELOPER_GUIDE.md)** - Contributing, extending, and development setup
+- **[🔧 Troubleshooting Guide](TROUBLESHOOTING.md)** - Problem diagnosis and solutions
+- **[🌐 API Documentation](https://lite.koboldai.net/koboldcpp_api)** - Complete API reference
+- **[📖 Wiki](https://github.com/LostRuins/koboldcpp/wiki)** - FAQ, community guides, and tips
 
 ## 🚀 Quick Start
 
