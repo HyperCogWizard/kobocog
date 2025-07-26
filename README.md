@@ -10,6 +10,7 @@ KoboldCpp is an easy-to-use AI text-generation software for GGML and GGUF models
 
 - **[📋 Documentation Index](DOCUMENTATION_INDEX.md)** - Complete documentation overview and navigation
 - **[🏗️ Technical Architecture](ARCHITECTURE.md)** - Comprehensive system architecture with mermaid diagrams
+- **[🧠 P9ML Cognitive System](P9ML-README.md)** - Advanced neural-symbolic reasoning integration
 - **[👨‍💻 Developer Guide](DEVELOPER_GUIDE.md)** - Contributing, extending, and development setup
 - **[🔧 Troubleshooting Guide](TROUBLESHOOTING.md)** - Problem diagnosis and solutions
 - **[🌐 API Documentation](https://lite.koboldai.net/koboldcpp_api)** - Complete API reference
@@ -58,7 +59,7 @@ KoboldCpp is an easy-to-use AI text-generation software for GGML and GGUF models
 | **Image Generation** | Stable Diffusion (1.5, SDXL, SD3, Flux) | ✅ A1111, ComfyUI |
 | **Speech-to-Text** | Whisper-based voice recognition | ✅ Whisper API |
 | **Text-to-Speech** | OuteTTS voice synthesis | ✅ XTTS, OpenAI Speech |
-| **Cognitive Reasoning** | OpenCog neural-symbolic AI | ✅ Custom endpoints |
+| **Cognitive Reasoning** | OpenCog neural-symbolic AI (P9ML) | ✅ Custom endpoints |
 
 ### 🎨 User Interface
 - **KoboldAI Lite UI** with editing tools, save formats, memory management

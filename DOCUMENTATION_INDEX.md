@@ -9,6 +9,7 @@ This index provides a comprehensive overview of all KoboldCpp documentation.
 | **[README.md](README.md)** | Main project overview, installation, and quick start | All users |
 | **[ARCHITECTURE.md](ARCHITECTURE.md)** | Technical architecture with mermaid diagrams | Developers, architects |
 | **[DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md)** | Development setup, contributing, extending | Contributors, developers |
+| **[P9ML-README.md](P9ML-README.md)** | P9ML cognitive system integration and usage guide | Advanced users, researchers |
 | **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** | Problem diagnosis and solutions | All users |
 
 ## 🗂️ Specialized Documentation
@@ -38,8 +39,9 @@ This index provides a comprehensive overview of all KoboldCpp documentation.
 
 ### For Advanced Users
 1. Review **[ARCHITECTURE.md](ARCHITECTURE.md)** for optimization insights
-2. Check **[opencog/README.md](opencog/README.md)** for cognitive features
-3. Use **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** for advanced debugging
+2. Check **[P9ML-README.md](P9ML-README.md)** for cognitive system features
+3. Check **[opencog/README.md](opencog/README.md)** for cognitive integration details
+4. Use **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** for advanced debugging
 
 ## 📊 Documentation Coverage
 
@@ -107,9 +109,9 @@ The documentation includes **22 mermaid diagrams** covering:
 
 | Metric | Count |
 |--------|--------|
-| **Total Documents** | 7 main + specialized docs |
-| **Mermaid Diagrams** | 22 architecture diagrams |
-| **Code Examples** | 50+ code snippets and examples |
+| **Total Documents** | 8 main + specialized docs |
+| **Mermaid Diagrams** | 25 architecture diagrams |
+| **Code Examples** | 60+ code snippets and examples |
 | **Troubleshooting Solutions** | 40+ common issues covered |
 | **Supported Platforms** | 4 primary (Windows, Linux, macOS, Android) |
 | **GPU Backends** | 4 acceleration methods |
